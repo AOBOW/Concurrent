@@ -122,8 +122,7 @@ public class LockType {
         //上重量级锁的时候 hashCode存在monitor中  解锁的时候会还回到对象的对象头的mark word中
         //而偏向锁的状态中  没有位置存hashcode  所以只能禁用该对象的偏向状态
         //所以对象存了hashCode  就不会上偏向锁了
-
-        dog1.hashCode();
+//        dog1.hashCode();
         log.debug(ClassLayout.parseInstance(dog1).toPrintable());
 
         synchronized (dog1){
