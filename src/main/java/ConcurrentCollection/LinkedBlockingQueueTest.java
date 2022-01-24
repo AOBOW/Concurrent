@@ -26,6 +26,14 @@ package ConcurrentCollection;
 //ConcurrentLinkedQueue  的两把锁 不是真正的lock或者synchronized  而是乐观锁 CAS实现的
 //tomcat的acceptor和poller(一个生产者 接收请求 一个消费者  读取请求) 就是采用了ConcurrentLinkedQueue
 
+import sun.applet.Main;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 //ArrayBlockingQueue    由数组结构组成的有界阻塞队列
 //LinkedBlockingQueue   由链表结构组成的有界(默认Integer.MAX_VALUE)阻塞队列
 //SynchronousQueue      不存储元素的阻塞队列  单个元素的队列
@@ -35,4 +43,83 @@ package ConcurrentCollection;
 //LinkedBlockingDeque   由链表结构组成的双向阻塞队列
 public class LinkedBlockingQueueTest {
 
+}
+
+class MyResource{
+    private volatile boolean flag = true; //默认开启 进行生成和消费
+    private AtomicInteger value = new AtomicInteger();
+
+    private BlockingQueue<String> blockingQueue = null;
+
+    public MyResource(BlockingQueue<String> blockingQueue){
+        this.blockingQueue = blockingQueue;
+        System.out.println(blockingQueue.getClass().getName());
+    }
+
+    public void product() throws Exception{
+        String data = null;
+        boolean returnValue;
+        while (flag){
+            data = value.incrementAndGet() + "";
+            returnValue = blockingQueue.offer(data, 2, TimeUnit.SECONDS);
+            if(returnValue){
+                System.out.println(Thread.currentThread().getName() + "\t插入" + data + "成功");
+            }else {
+                System.out.println(Thread.currentThread().getName() + "\t插入" + data + "失败");
+            }
+            TimeUnit.SECONDS.sleep(1);
+        }
+        System.out.println(Thread.currentThread().getName() + "\t生成结束");
+    }
+
+    public void consume() throws Exception{
+        String result = null;
+        while (flag){
+            result = blockingQueue.poll(2, TimeUnit.SECONDS);
+            if(result == null || result.equalsIgnoreCase("")){
+                flag = true;
+                System.out.println(Thread.currentThread().getName() + "\t消费失败");
+                return;
+            }
+            System.out.println(Thread.currentThread().getName() + "\t消费" + result + "成功");
+        }
+    }
+
+    public void stop() throws Exception{
+        this.flag = false;
+    }
+
+    public static void main(String[] args) {
+        MyResource myResource = new MyResource(new ArrayBlockingQueue<>(10));
+
+        new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + "开始生成");
+            try {
+                myResource.product();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "produce").start();
+
+        new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + "开始消费");
+            try {
+                myResource.consume();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "consume").start();
+
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            myResource.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
