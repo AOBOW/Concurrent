@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jol.info.ClassLayout;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 //CAS  compare and swap  保证交换操作为原子的 不会被打断
 /**
@@ -175,5 +177,28 @@ class Test{
 
             }
         }, "t2").start();
+    }
+}
+
+//一个线程 拿了一个锁之后 可以再拿另一锁
+class test1{
+    static Lock lock1 = new ReentrantLock();
+    static Lock lock2 = new ReentrantLock();
+
+    public static void method1(){
+        lock1.lock();
+        System.out.println(1);
+        method2();
+        lock1.unlock();
+    }
+
+    public static void method2(){
+        lock2.lock();
+        System.out.println(2);
+        lock2.unlock();
+    }
+
+    public static void main(String[] args) {
+        method1();
     }
 }

@@ -20,5 +20,9 @@ package ConcurrentCollection;
 //弱一致性其实就相当于数据库中的可重复读 MVCC(多版本并发控制)
 //让一个事物中两次读取读到的都是一样的 这就需要弱一致性  不要马上就改变
 //高并发和一致性是矛盾的 需要权衡
+
+//HashSet的底层是HashMap  存入的值是key  所有的value都是一个值new object();
+//之所以不用null  用一个object 是因为remove的时候  成功返回value 失败返回null
+//如果都用null  无法判断是否删除成功
 public class CopyOnWriteArrayListTest {
 }

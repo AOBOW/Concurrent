@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 //Semaphore 信号量 用来限制能同时访问共享资源的信号量
+//Semaphore  类似于线程池
 
 //Semaphore 也是用的AQS框架实现的  构造器中直接将传入的信号量个数设置为AQS的state
 //然后使用共享锁的机制  每次acquire就检查state  大于0则减1  表示可以继续执行

@@ -25,6 +25,14 @@ package ConcurrentCollection;
 //ConcurrentLinkedQueue在实现上 几乎和LinkedBlockingQueue一模一样  唯一的区别是
 //ConcurrentLinkedQueue  的两把锁 不是真正的lock或者synchronized  而是乐观锁 CAS实现的
 //tomcat的acceptor和poller(一个生产者 接收请求 一个消费者  读取请求) 就是采用了ConcurrentLinkedQueue
+
+//ArrayBlockingQueue    由数组结构组成的有界阻塞队列
+//LinkedBlockingQueue   由链表结构组成的有界(默认Integer.MAX_VALUE)阻塞队列
+//SynchronousQueue      不存储元素的阻塞队列  单个元素的队列
+//PriorityBlockingQueue 支持优先级顺序的无界阻塞队列
+//DelayQueue            使用优先级队列实现的延迟无界阻塞队列
+//LinkedTransferQueue   由链表结构组成的无界阻塞队列
+//LinkedBlockingDeque   由链表结构组成的双向阻塞队列
 public class LinkedBlockingQueueTest {
 
 }
