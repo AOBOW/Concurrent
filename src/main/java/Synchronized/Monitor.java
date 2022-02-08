@@ -32,6 +32,16 @@ package Synchronized; /**
  * WaitSet中放的是之前获得过锁  但被wait 等待notify的线程
  *
  * synchronized中如果出现异常  也会释放锁
+ * 字节码文件中  有monitorEnter代表synchronized
+ * 有两个monitorExit  代表正常退出 和异常退出
+ *
+ * Synchronized是可重入锁
+ * 每一个锁对象拥有一个计数器和一个指向持有该锁的线程的指针。
+ * 当执行monitorEnter时 如果目标锁对象的计数器为零 则说明它没有被其他线程所持有
+ * JVM会将该锁对象的持有线程设置为当前线程 并且将计数器加1
+ * 当目标对象的计数器不为0的情况下  如果锁对象的持有线程是当前线程  JVM将计数器加1
+ * 不是当前线程则进入EntryList等待
+ * 当执行monitorExit时  JVM将锁对象的计数器减1  计数器为0代表锁被释放
  */
 public class Monitor {
 }
