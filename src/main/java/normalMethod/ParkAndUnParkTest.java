@@ -18,7 +18,7 @@ import java.util.concurrent.locks.LockSupport;
  *                并且在被唤醒后  重置标志位为0
  *                也就是说 park就是无论如何 也要有一次将标志位从1变成0的操作
  *                可以将1变成0  就变换之后继续执行  不能将1变成0 就等待这个标志位变成1  然后执行
- * unpark的作用是  将标志位设置为1  如果condition中有线程在等待
+ * unpark的作用是  将标志位设置为1  如果unpark参数中的线程在condition中等待
  *                唤醒(唤醒后线程会将变成1的标志位变成0 然后继续执行)
  *
  *
